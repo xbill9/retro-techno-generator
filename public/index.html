@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Retro Techno Generator</title>
+<style>
+  :root { --fg: #39ff14; --bg: #000; --dim: #1a3d12; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--fg); font: 14px/1.4 "Courier New", monospace; overflow: hidden; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; }
+  #hud { position: fixed; top: 16px; left: 16px; right: 16px; display: flex; gap: 24px; flex-wrap: wrap; pointer-events: none; text-shadow: 0 0 8px currentColor; }
+  #hud b { display: block; font-size: 32px; }
+  #status { position: fixed; bottom: 16px; left: 16px; opacity: .8; }
+  #controls { position: fixed; bottom: 16px; right: 16px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  #fake { position: fixed; top: 110px; right: 16px; display: none; flex-direction: column; gap: 6px; background: #000c; border: 1px solid var(--dim); padding: 12px; }
+  #fake label { display: flex; justify-content: space-between; gap: 12px; }
+  button, select { background: #000; color: var(--fg); border: 1px solid var(--fg); font: inherit; padding: 6px 12px; cursor: pointer; }
+  #consent { position: fixed; inset: 0; display: grid; place-items: center; background: #000e; padding: 16px; }
+  #consent div { max-width: 560px; border: 1px solid var(--fg); padding: 24px; }
+  #consent h1 { margin-top: 0; font-size: 22px; }
+</style>
+</head>
+<body>
+<canvas id="scope"></canvas>
+<div id="hud">
+  <div>MODE<b id="mode">-</b></div>
+  <div>BPM<b id="bpm">-</b></div>
+  <div>PULSE<b id="pulse">-</b></div>
+  <div>BREATHS/MIN<b id="breath">-</b></div>
+  <div>SMILE<b id="smile">-</b></div>
+</div>
+<div id="status">waiting</div>
+<div id="controls">
+  <select id="override">
+    <option value="auto">auto (pulse picks)</option>
+    <option value="ambient">ambient</option>
+    <option value="acid">acid</option>
+    <option value="hardcore">hardcore</option>
+  </select>
+  <button id="stop">Stop</button>
+</div>
+<div id="fake">
+  <strong>FAKE SIGNALS</strong>
+  <label>pulse <input id="f-pulse" type="range" min="50" max="120" value="72"></label>
+  <label>breaths/min <input id="f-breath" type="range" min="6" max="30" value="14"></label>
+  <label>smile <input id="f-smile" type="range" min="0" max="100" value="0"></label>
+  <label>talking <input id="f-talk" type="checkbox"></label>
+  <button id="f-blink">blink</button>
+  <button id="f-surprise">surprise</button>
+</div>
+<div id="consent">
+  <div>
+    <h1>RETRO TECHNO GENERATOR</h1>
+    <p>Your pulse sets the tempo and picks the style: ambient when calm, acid techno in between, early-90s hardcore when it's racing. Smiles, blinks, talking and breathing play the rest.</p>
+    <p>Pressing Start turns on your camera so the SmartSpectra SDK can measure pulse, breathing and expressions. <strong>The video is never displayed, recorded or stored.</strong> Only the numbers reach this page, and nothing is saved. SDK telemetry is switched off. Measurements need a session with Presage's servers; see the README.</p>
+    <p>This is a toy, not a medical device.</p>
+    <button id="start">Start</button>
+  </div>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

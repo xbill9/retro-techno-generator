@@ -1,0 +1,17 @@
+{
+  "name": "retro-techno-generator",
+  "version": "0.1.0",
+  "description": "Your pulse plays 90s acid techno and hardcore. Presage SmartSpectra SDK challenge entry.",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "fake": "node server.js --fake"
+  },
+  "engines": { "node": ">=20" },
+  "license": "MIT",
+  "dependencies": {
+    "@smartspectra/node-sdk": "3.4.0",
+    "ws": "^8.18.0"
+  }
+}
