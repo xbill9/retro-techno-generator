@@ -1,0 +1,35 @@
+# SmartSpectra Node SDK 3.4.0 runs on this machine, 2026-11-06 (Linux, Chicony integrated camera 1280x720 MJPG 30 fps)
+
+## Shutdown, 10 runs with the user in front of the camera, 15 s each, NVIDIA EGL vs Mesa EGL
+nvidia 1 exit=0 (log: 1 'No face' frames, packets 0)
+mesa 1 exit=0 (log: 48 'No face' frames, packets 0)
+nvidia 2 exit=0 (log: 0 'No face' frames, packets 0)
+mesa 2 exit=0 (log: 0 'No face' frames, packets 0)
+nvidia 3 exit=0 (log: 24 'No face' frames, packets 0)
+mesa 3 exit=0 (log: 60 'No face' frames, packets 0)
+nvidia 4 exit=0 (log: 448 'No face' frames, packets 0)
+mesa 4 exit=0 (log: 448 'No face' frames, packets 0)
+nvidia 5 exit=0 (log: 448 'No face' frames, packets 0)
+mesa 5 exit=0 (log: 84 'No face' frames, packets 0)
+
+## videoOutput event, 5 s run
+VO 2764800 1280 720 3840 0     (bytes, width, height, stride, pixelFormat=kRGB)
+video frames 149
+
+## frameSentThrough count, 16 s run
+FRAMES 42 sent 42 status 2
+FRAMES 102 sent 102 status 2
+FRAMES 162 sent 162 status 2
+FRAMES 222 sent 222 status 2
+FRAMES 282 sent 282 status 2
+FRAMES 342 sent 342 status 2
+FRAMES 402 sent 402 status 2
+FRAMES 462 sent 462 status 2
+
+## Positioning messages with face visible but chest out of frame (30 s run, run-length counts)
+    471 VALID 16 Move up, or tilt the camera down.
+    397 VALID 16 Move up, or tilt the camera down.
+      9 VALID 7 Place more of the chest in view.
+      6 VALID 16 Move up, or tilt the camera down.
+      5 VALID 7 Place more of the chest in view.
+      2 VALID 7 Place more of the chest in view.

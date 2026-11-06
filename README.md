@@ -2,7 +2,7 @@
 
 Your pulse plays 90s acid techno and hardcore. The Presage SmartSpectra SDK reads your pulse, breathing and expressions from a webcam, and a browser page turns them into music with Web Audio. No samples; every sound is synthesised.
 
-The page never shows the camera image. It shows an oscilloscope, a step grid and the numbers.
+The page shows an oscilloscope, a step grid, the numbers and a small mirror view of the camera for lining up.
 
 #### What does what
 
@@ -40,10 +40,10 @@ Open http://localhost:8080 and press Start. Get a free API key at https://physio
 #### Consent and data
 
 - The camera turns on only after you press Start, and off when you press Stop.
-- Video frames go from the camera to the SDK in the Node process. They are never sent to the page, displayed, recorded or written to disk.
+- Video frames go from the camera to the SDK in the Node process. A shrunk copy goes to the page as the mirror preview; no frame is recorded or written to disk.
 - Numbers (pulse, breathing rate, breathing trace, blink/talk flags, expression scores, a movement level) and a 320×180 mirror preview at about 10 frames a second cross the local WebSocket to the page. The server listens on 127.0.0.1 only. Nothing is recorded or stored.
-- The SDK computes every metric on-device. It contacts Presage's servers only to validate the API key, so it needs a network connection.
-- SDK telemetry is switched off (`enableTelemetry: false`).
+- The SDK needs a network connection: measurements run inside an authenticated session with Presage's servers, opened with your API key.
+- SDK telemetry is switched off (`enableTelemetry: false`). Per Presage's [Telemetry & Privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy) page, the SDK then starts no telemetry session and transmits no session summary; even when on, that summary never contains video frames or measured values.
 - This is a music toy. It makes no health or medical claims.
 
 #### Files

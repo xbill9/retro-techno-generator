@@ -1,0 +1,7 @@
+# Movement level, measured in the page (Chrome, http://localhost:8080), 2026-11-06
+
+## Raw value from the server: mean per-pixel brightness change between 320x180 previews, sitting still in a dim room, 100 samples
+{"n":100,"min":3.03,"p50":3.56,"p90":8.58,"max":17.58}
+
+## After the noise-floor tracking: [move 0..1, VITALS readout, pulse] sampled every 500 ms
+[["0.02","HELD",72],["0.01","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.06","LIVE",72],["0.26","HELD",72],["0.14","HELD",72],["0.06","HELD",72],["0.03","HELD",72],["0.37","HELD",72],["0.17","HELD",72],["0.10","HELD",72],["0.04","HELD",72],["0.02","LIVE",72],["0.01","LIVE",72],["0.12","LIVE",72],["0.06","LIVE",72],["0.03","LIVE",72],["0.20","HELD",72],["0.13","HELD",72],["0.07","HELD",72],["0.03","HELD",72],["0.02","LIVE",72],["0.01","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72],["0.00","LIVE",72]]
