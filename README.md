@@ -28,6 +28,8 @@ SMARTSPECTRA_API_KEY=... npm start                      # live camera
 SMARTSPECTRA_API_KEY=... node server.js --file me.mp4   # pre-recorded video
 ```
 
+Put the key in `.env` as `SMARTSPECTRA_API_KEY=...` (git ignores it) and `npm start` picks it up. `node server.js --list-cameras` lists cameras; set `CAMERA=<id>` in `.env` to pick one other than the default.
+
 Open http://localhost:8080 and press Start. Get a free API key at https://physiology.presagetech.com/auth/register.
 
 #### Consent and data

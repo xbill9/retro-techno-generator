@@ -12,6 +12,12 @@ import { extname, join, normalize, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { WebSocketServer } from 'ws';
 
+if (process.argv.includes('--list-cameras')) {
+  const S = await import('@smartspectra/node-sdk');
+  for (const c of S.SmartSpectraSDK.availableCameras()) console.log(`${c.id}  ${c.name ?? ''}`);
+  process.exit(0);
+}
+
 const PORT = Number(process.env.PORT || 8080);
 const KEY = process.env.SMARTSPECTRA_API_KEY;
 const args = process.argv.slice(2);
@@ -65,7 +71,7 @@ async function startSdk() {
   sdk.on('processingStatus', (status) => broadcast({ type: 'processing', status }));
   sdk.on('error', (code, message) => broadcast({ type: 'error', code, message }));
   if (FILE) sdk.useFile(FILE, { interframeDelayMs: 33 });
-  else sdk.useCamera(S.CameraSelection.default);
+  else sdk.useCamera(process.env.CAMERA ? S.CameraSelection.byId(process.env.CAMERA) : S.CameraSelection.default);
   sdk.start();
   console.log(FILE ? `measuring from ${FILE}` : 'camera on');
 }
