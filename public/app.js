@@ -2,7 +2,12 @@
 
 // ---- signals ------------------------------------------------------------
 
-const sig = { pulse: 72, breath: 14, breathLevel: 0.5, smile: 0, surprise: 0, talking: false };
+const sig = { pulse: 72, breath: 14, breathLevel: 0.5, smile: 0, surprise: 0, talking: false, move: 0 };
+// Vitals need you still; dancing moves the music instead. Below STILL the
+// pulse and breathing readings are trusted, above it the last good ones hold.
+const STILL = 0.15;
+let lastMoveAt = 0, noiseFloor = null;
+const isStill = () => sig.move < STILL && performance.now() - lastMoveAt > 1500;
 let source = 'camera';
 let breathHist = [];
 let fakeBreathPhase = 0;
@@ -11,15 +16,27 @@ const $ = (id) => document.getElementById(id);
 const pct = (v) => Math.min(1, Math.max(0, v / 100)); // SDK expression confidence is a percentage, 0-100
 
 const ws = new WebSocket(`ws://${location.host}`);
+ws.binaryType = 'arraybuffer';
 ws.onmessage = (e) => {
+  if (e.data instanceof ArrayBuffer) { calib.frame(e.data); return; }
   const m = JSON.parse(e.data);
   if (m.type === 'hello') { source = m.source; if (source === 'fake') $('fake').style.display = 'flex'; setStatus(`source: ${source}`); }
-  if (m.type === 'status') setStatus(m.code === 0 ? 'measuring' : m.hint || `check camera (${m.code})`);
+  if (m.type === 'status') { calib.status(m.code, m.hint); setStatus(m.code === 0 ? 'in position' : m.hint || `check camera (${m.code})`); }
   if (m.type === 'error') setStatus(`error: ${m.message}`);
+  if (m.type === 'motion') {
+    // camera noise sets a floor that varies with room light (about 3.5 in a dim
+    // room); track it from below so standing still reads as zero
+    noiseFloor = noiseFloor === null || m.value < noiseFloor ? m.value : noiseFloor + (m.value - noiseFloor) * 0.003;
+    const v = Math.min(1, Math.max(0, (m.value - noiseFloor - 1) / 10)); // -> 0..1
+    sig.move += (v - sig.move) * (v > sig.move ? 0.6 : 0.15);  // fast attack, slow release
+    if (sig.move >= STILL) lastMoveAt = performance.now();
+  }
   if (m.type === 'signals') {
-    if (m.pulse > 0) sig.pulse = m.pulse;
-    if (m.breath > 0) sig.breath = m.breath;
-    if (m.breathTrace) {
+    calib.signals();
+    const still = isStill();
+    if (still && m.pulse > 0) sig.pulse = m.pulse;
+    if (still && m.breath > 0) sig.breath = m.breath;
+    if (still && m.breathTrace) {
       breathHist = breathHist.concat(m.breathTrace).slice(-300);
       const lo = Math.min(...breathHist), hi = Math.max(...breathHist);
       sig.breathLevel = hi > lo ? (breathHist[breathHist.length - 1] - lo) / (hi - lo) : 0.5;
@@ -35,6 +52,75 @@ ws.onmessage = (e) => {
   }
 };
 const setStatus = (t) => { $('status').textContent = t; };
+
+// ---- alignment preview --------------------------------------------------
+// Mirror view of the camera with a head-and-shoulders outline, a red/yellow/green
+// border and one plain instruction, so you can line up without guessing. It
+// fills the screen until measurements flow, then shrinks to a corner thumbnail.
+
+const SAY = { // SDK ValidationCode -> what to do, in plain words
+  0: '✓ Good spot. Hold still…',
+  1: "Can't see a face. Sit in front of the camera",
+  2: 'Only one person in view, please',
+  3: 'Put your face inside the outline',
+  4: 'Move back a little',
+  5: 'Too dark. Put a light in front of you',
+  6: 'Too bright. Move away from the light behind you',
+  7: '⬇ Show your shoulders: lean back or tilt the screen forward',
+  10: 'Camera adjusting… hold on',
+  11: 'Camera too slow. Add more light',
+  12: 'Moving. Freeze for a few seconds to re-read pulse',
+  13: '↩ Too close. Lean back',
+  14: '↪ Too far. Come closer',
+  15: '⬇ Move down, or tilt the screen back',
+  16: '⬆ Move up, or tilt the screen forward',
+  17: 'Look straight at the camera',
+};
+
+const calib = (() => {
+  const box = $('calib'), cv = $('preview'), g = cv.getContext('2d');
+  const off = document.createElement('canvas'), og = off.getContext('2d');
+  let code = null, hint = '', lastSignal = 0, running = false, view = 'auto', locked = false; // view: auto | hidden
+  const measuring = () => Date.now() - lastSignal < 3000;
+
+  function layout() {
+    const show = running && view !== 'hidden';
+    box.style.display = show ? 'flex' : 'none';
+    if (measuring() && code === 0) locked = true; // first good reading: from now on stay a thumbnail
+    box.classList.toggle('small', locked);
+    box.classList.toggle('ok', code === 0);
+    const colour = code === 0 ? (measuring() ? '#39ff14' : '#fc3') : '#f33';
+    cv.style.borderColor = colour;
+    $('c-say').textContent = code === null ? 'Starting camera…' : measuring() && code === 0 ? '✓ Measuring' : SAY[code] || hint || `Check camera (${code})`;
+    $('c-sub').textContent = code !== null && code !== 0 && hint ? `(${hint})` : code === 0 && !measuring() ? 'First readings take a few seconds.' : '';
+  }
+
+  function frame(ab) {
+    const v = new DataView(ab), w = v.getUint16(0, true), h = v.getUint16(2, true);
+    const rgb = new Uint8Array(ab, 4), img = og.createImageData(w, h);
+    for (let i = 0, j = 0; i < rgb.length; i += 3, j += 4) { img.data[j] = rgb[i]; img.data[j + 1] = rgb[i + 1]; img.data[j + 2] = rgb[i + 2]; img.data[j + 3] = 255; }
+    if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
+    og.putImageData(img, 0, 0);
+    const W = cv.width, H = cv.height;
+    g.save(); g.translate(W, 0); g.scale(-1, 1); g.drawImage(off, 0, 0, W, H); g.restore(); // mirror
+    // target outline: head in the upper middle, shoulders along the bottom
+    g.setLineDash([6, 5]); g.lineWidth = 2; g.strokeStyle = code === 0 ? '#39ff14' : '#ffffffcc';
+    g.beginPath(); g.ellipse(W / 2, H * 0.40, W * 0.085, H * 0.21, 0, 0, Math.PI * 2); g.stroke();
+    g.beginPath(); g.moveTo(W * 0.22, H); g.quadraticCurveTo(W * 0.26, H * 0.70, W * 0.42, H * 0.67);
+    g.moveTo(W * 0.78, H); g.quadraticCurveTo(W * 0.74, H * 0.70, W * 0.58, H * 0.67); g.stroke();
+    g.setLineDash([]);
+    layout();
+  }
+
+  return {
+    frame,
+    status(c, h) { code = c; hint = h || ''; layout(); },
+    signals() { lastSignal = Date.now(); layout(); },
+    start() { running = source !== 'fake'; code = null; view = 'auto'; locked = false; layout(); },
+    stop() { running = false; layout(); },
+    toggle() { view = view === 'hidden' ? 'auto' : 'hidden'; layout(); },
+  };
+})();
 
 // fake-signal panel
 $('f-pulse').oninput = (e) => { sig.pulse = +e.target.value; };
@@ -100,7 +186,7 @@ function tone(t, type, freq, peak, dec, dest = bus) {
 function acid(t, note, accent, dur) {
   const o = ctx.createOscillator(), f = ctx.createBiquadFilter(), g = ctx.createGain();
   o.type = 'sawtooth'; o.frequency.value = mtof(note);
-  const base = 180 + sig.smile * 2200 + sig.breathLevel * 500;
+  const base = 180 + sig.smile * 2200 + sig.breathLevel * 500 + sig.move * 2500;
   f.type = 'lowpass'; f.Q.value = 14 + sig.smile * 10;
   f.frequency.setValueAtTime(base * (accent ? 5 : 3), t);
   f.frequency.exponentialRampToValueAtTime(base, t + (accent ? 0.25 : 0.15));
@@ -193,7 +279,7 @@ const engine = {
       if (s === 0) kick(t, false);
     } else if (mode === 'acid') {
       if (s % 4 === 0) kick(t, false);
-      if (s % 4 === 2) hat(t, true); else if (s % 2 === 1) hat(t, false);
+      if (s % 4 === 2) hat(t, true); else if (s % 2 === 1 || sig.move > 0.5) hat(t, false);
       if (s === 4 || s === 12) clap(t);
       const n = this.acidPat[s]; if (n) acid(t, n.note, n.accent, sixteenth);
       if (sig.talking && s % 4 === 3) vox(t);
@@ -201,7 +287,7 @@ const engine = {
       if (s % 4 === 0) kick(t, true);
       if ([4, 12].includes(s)) snare(t, 0.7);
       if ([7, 9, 15].includes(s)) snare(t, 0.25);
-      if (s % 2 === 0) hat(t, s % 4 === 2);
+      if (s % 2 === 0 || sig.move > 0.5) hat(t, s % 4 === 2);
       if ([0, 3, 6, 10].includes(s)) stab(t, chord(this.bar % 4 === 3 ? 4 : 0));
       if (s % 4 === 0) tone(t, 'sine', mtof(ROOT - 12), 0.4, sixteenth * 3);
       if (sig.talking && s % 2 === 1) vox(t);
@@ -224,8 +310,9 @@ const engine = {
       this.nextTime += 60 / this.bpm / 4;
       this.step = (this.step + 1) % 16;
     }
-    // master filter breathes with you
-    master.frequency.setTargetAtTime(1500 + sig.breathLevel * 16000, ctx.currentTime, 0.1);
+    // master filter: movement opens it, breathing sways it while you're still
+    if (!isStill()) sig.breathLevel += (0.5 - sig.breathLevel) * 0.02;
+    master.frequency.setTargetAtTime(1200 + sig.move * 14000 + sig.breathLevel * 4000, ctx.currentTime, 0.1);
   },
 
   start() {
@@ -293,6 +380,8 @@ function draw() {
   $('pulse').textContent = Math.round(sig.pulse);
   $('breath').textContent = Math.round(sig.breath);
   $('smile').textContent = `${Math.round(sig.smile * 100)}%`;
+  $('move').textContent = '█'.repeat(Math.round(sig.move * 8)).padEnd(8, '·');
+  $('vitals').textContent = source === 'fake' ? '-' : isStill() ? 'LIVE' : 'HELD';
 }
 draw();
 
@@ -300,12 +389,15 @@ draw();
 
 $('start').onclick = () => {
   $('consent').style.display = 'none';
+  calib.start();
   engine.start();
   ws.send(JSON.stringify({ type: 'start' }));
 };
 $('stop').onclick = () => {
   engine.stop();
+  calib.stop();
   ws.send(JSON.stringify({ type: 'stop' }));
   $('consent').style.display = 'grid';
   setStatus('stopped, camera off');
 };
+$('view').onclick = () => calib.toggle();

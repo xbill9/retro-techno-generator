@@ -70,6 +70,7 @@ async function startSdk() {
   sdk.on('validationStatus', (code, _ts, hint) => broadcast({ type: 'status', code, hint }));
   sdk.on('processingStatus', (status) => broadcast({ type: 'processing', status }));
   sdk.on('error', (code, message) => broadcast({ type: 'error', code, message }));
+  sdk.on('videoOutput', onVideo);
   if (FILE) sdk.useFile(FILE, { interframeDelayMs: 33 });
   else sdk.useCamera(process.env.CAMERA ? S.CameraSelection.byId(process.env.CAMERA) : S.CameraSelection.default);
   sdk.start();
@@ -78,10 +79,48 @@ async function startSdk() {
 
 async function stopSdk() {
   if (!sdk) return;
+  prevLuma = null;
   const s = sdk; sdk = null;
   await s.stopAsync();
   await s.destroy();
   console.log('camera off');
+}
+
+// Alignment preview: about 10 frames a second, shrunk to PREVIEW_W wide RGB, sent
+// as a binary WebSocket message: [u16 width][u16 height][rgb bytes]. Only goes
+// to this machine's page (the server listens on 127.0.0.1); never written to disk.
+const PREVIEW_W = 320;
+// The same frames give a movement level: mean brightness change between
+// consecutive previews, 0-255. Dancing drives the music through this, since
+// pulse and breathing can only be read while you hold still.
+let lastPreview = 0, prevLuma = null;
+function onVideo(buf, w, h, stride, fmt) {
+  const now = Date.now();
+  if (now - lastPreview < 100 || !wss.clients.size) return;
+  lastPreview = now;
+  const step = Math.max(1, Math.round(w / PREVIEW_W));
+  const ow = Math.floor(w / step), oh = Math.floor(h / step);
+  const bpp = fmt === 2 || fmt === 3 ? 4 : 3;              // kRGBA/kBGRA : kRGB/kBGR
+  const [r, b] = fmt === 1 || fmt === 3 ? [2, 0] : [0, 2]; // BGR orders swap red and blue
+  if (fmt > 3) return;                                     // YUV formats not handled
+  const out = Buffer.allocUnsafe(4 + ow * oh * 3);
+  out.writeUInt16LE(ow, 0); out.writeUInt16LE(oh, 2);
+  let o = 4;
+  for (let y = 0; y < oh; y++) {
+    let i = y * step * stride;
+    for (let x = 0; x < ow; x++, i += step * bpp) {
+      out[o++] = buf[i + r]; out[o++] = buf[i + 1]; out[o++] = buf[i + b];
+    }
+  }
+  const luma = new Uint8Array(ow * oh);
+  let diff = 0;
+  for (let p = 0, q = 4; p < luma.length; p++, q += 3) {
+    luma[p] = (out[q] * 77 + out[q + 1] * 150 + out[q + 2] * 29) >> 8;
+    if (prevLuma) diff += Math.abs(luma[p] - prevLuma[p]);
+  }
+  if (prevLuma?.length === luma.length) broadcast({ type: 'motion', value: diff / luma.length });
+  prevLuma = luma;
+  for (const c of wss.clients) if (c.readyState === 1) c.send(out, { binary: true });
 }
 
 function onMetrics(m) {

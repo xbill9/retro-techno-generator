@@ -9,11 +9,16 @@ The page never shows the camera image. It shows an oscilloscope, a step grid and
 | Signal | Effect |
 | --- | --- |
 | Pulse | Tempo is pulse × 2 (100–190 BPM). Under ~70: ambient pads. 70–90: acid techno. Over ~90: early-90s hardcore breaks and piano stabs. |
-| Breathing waveform | Opens and closes the master filter, so the track breathes with you. |
+| Movement | Dancing opens the master filter, brightens the acid line and doubles the hi-hats. |
+| Breathing waveform | Sways the master filter while you're still. |
 | Smile (happy expression) | Opens the 303 acid filter and switches to a major key. |
 | Surprise | Fires a hoover synth. |
 | Blink | Stutters the drums and tears the visuals. |
 | Talking | Pitched-up formant "vocal" chops. |
+
+Pulse and breathing can only be read while you hold still, and dancing moves the music, so the two take turns. The VITALS readout says LIVE while you're still and HELD while you move; held values stay in force until the next still moment. Dance hard, freeze for a few seconds, and the higher pulse pushes the tempo up.
+
+After Start, a mirror view of the camera with a head-and-shoulders outline helps you line up: the border turns green and the instruction underneath reads "✓ Measuring" once you're in position, then it shrinks to a corner thumbnail. The SDK needs your face and upper chest in frame, lit from the front.
 
 The mode dropdown overrides the pulse-based style.
 
@@ -36,7 +41,7 @@ Open http://localhost:8080 and press Start. Get a free API key at https://physio
 
 - The camera turns on only after you press Start, and off when you press Stop.
 - Video frames go from the camera to the SDK in the Node process. They are never sent to the page, displayed, recorded or written to disk.
-- Only numbers (pulse, breathing rate, breathing trace, blink/talk flags, expression scores) cross the local WebSocket to the page. The server listens on 127.0.0.1 only. Nothing is stored.
+- Numbers (pulse, breathing rate, breathing trace, blink/talk flags, expression scores, a movement level) and a 320×180 mirror preview at about 10 frames a second cross the local WebSocket to the page. The server listens on 127.0.0.1 only. Nothing is recorded or stored.
 - The SDK computes every metric on-device. It contacts Presage's servers only to validate the API key, so it needs a network connection.
 - SDK telemetry is switched off (`enableTelemetry: false`).
 - This is a music toy. It makes no health or medical claims.
