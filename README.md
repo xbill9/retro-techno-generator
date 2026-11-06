@@ -18,7 +18,7 @@ The page shows an oscilloscope, a step grid, the numbers and a small mirror view
 
 Pulse and breathing can only be read while you hold still, and dancing moves the music, so the two take turns. The VITALS readout says LIVE while you're still and HELD while you move; held values stay in force until the next still moment. Dance hard, freeze for a few seconds, and the higher pulse pushes the tempo up.
 
-After Start, a mirror view of the camera with a head-and-shoulders outline helps you line up: the border turns green and the instruction underneath reads "✓ Measuring" once you're in position, then it shrinks to a corner thumbnail. The SDK needs your face and upper chest in frame, lit from the front.
+After Start, a mirror view of the camera with a head-and-shoulders outline helps you line up: the border turns green and the instruction underneath reads "✓ Measuring" once you're in position, then it shrinks to a corner thumbnail. The SDK needs your face and upper chest in frame, lit from the front. The **Pixelate** button turns the preview into coarse blocks, enough to line up against the outline without showing a recognisable face, for streaming or recording a demo; the setting is remembered in the browser.
 
 The mode dropdown overrides the pulse-based style.
 

@@ -80,6 +80,11 @@ const SAY = { // SDK ValidationCode -> what to do, in plain words
 const calib = (() => {
   const box = $('calib'), cv = $('preview'), g = cv.getContext('2d');
   const off = document.createElement('canvas'), og = off.getContext('2d');
+  // Pixelate: draws the preview as coarse blocks, enough to line up against the
+  // outline without showing a recognisable face (for streaming or recording)
+  const tiny = document.createElement('canvas'), tg = tiny.getContext('2d');
+  let pixelate = false;
+  try { pixelate = localStorage.getItem('pixelate') === '1'; } catch {}
   let code = null, hint = '', lastSignal = 0, running = false, view = 'auto', locked = false; // view: auto | hidden
   const measuring = () => Date.now() - lastSignal < 3000;
 
@@ -102,7 +107,13 @@ const calib = (() => {
     if (off.width !== w || off.height !== h) { off.width = w; off.height = h; }
     og.putImageData(img, 0, 0);
     const W = cv.width, H = cv.height;
-    g.save(); g.translate(W, 0); g.scale(-1, 1); g.drawImage(off, 0, 0, W, H); g.restore(); // mirror
+    let src = off;
+    if (pixelate) {
+      tiny.width = 24; tiny.height = Math.round(24 * h / w);
+      tg.drawImage(off, 0, 0, tiny.width, tiny.height); src = tiny;
+    }
+    g.imageSmoothingEnabled = !pixelate;
+    g.save(); g.translate(W, 0); g.scale(-1, 1); g.drawImage(src, 0, 0, W, H); g.restore(); // mirror
     // target outline: head in the upper middle, shoulders along the bottom
     g.setLineDash([6, 5]); g.lineWidth = 2; g.strokeStyle = code === 0 ? '#39ff14' : '#ffffffcc';
     g.beginPath(); g.ellipse(W / 2, H * 0.40, W * 0.085, H * 0.21, 0, 0, Math.PI * 2); g.stroke();
@@ -118,6 +129,11 @@ const calib = (() => {
     signals() { lastSignal = Date.now(); layout(); },
     start() { running = source !== 'fake'; code = null; view = 'auto'; locked = false; layout(); },
     stop() { running = false; layout(); },
+    setPixelate(on) {
+      pixelate = on; try { localStorage.setItem('pixelate', on ? '1' : '0'); } catch {}
+      $('pixel').textContent = on ? 'Show face' : 'Pixelate';
+    },
+    get pixelate() { return pixelate; },
     toggle() { view = view === 'hidden' ? 'auto' : 'hidden'; layout(); },
   };
 })();
@@ -401,3 +417,5 @@ $('stop').onclick = () => {
   setStatus('stopped, camera off');
 };
 $('view').onclick = () => calib.toggle();
+$('pixel').onclick = () => calib.setPixelate(!calib.pixelate);
+calib.setPixelate(calib.pixelate);
