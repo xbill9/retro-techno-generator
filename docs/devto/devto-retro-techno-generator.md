@@ -172,7 +172,7 @@ The tempo closes 5% of the gap to the held pulse on every sixteenth-note step, s
 ## Consent and Data Handling
 
 - **Consent first.** The page opens on a consent screen that says what the camera is for. The camera turns on only when you press Start and turns off when you press Stop.
-- **Video stays on the machine.** Frames go from the camera to the SDK in the local Node process. A 320×180 copy goes to the page for the mirror view. No frame is recorded or written to disk. Pixelate reduces that view to coarse blocks for anyone streaming or recording their screen.
+- **Video stays on the machine.** Frames go from the camera to the SDK in the local Node process. A 320×180 copy goes to the page for the mirror view. No frame is recorded or written to disk. Pixelate reduces that view to coarse blocks for anyone streaming or recording their screen. The app writes no camera frame to disk. The one exception is the **● Record** button, used for the demo: only while it is on, it saves a .webm of the page as shown, with the synth audio, to the browser's Downloads folder.
 - **Local only.** The server listens on `127.0.0.1`, so nothing outside the machine can open the page or the WebSocket.
 - **Nothing is stored.** No measurements, frames or logs of signals are kept. Closing the page or pressing Stop ends everything.
 - **SDK telemetry is off** (`enableTelemetry: false`). Per Presage's Telemetry & Privacy page, the SDK then starts no telemetry session and transmits no session summary, and even when on, that summary never contains video frames or measured values.

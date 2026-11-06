@@ -40,7 +40,8 @@ Open http://localhost:8080 and press Start. Get a free API key at https://physio
 #### Consent and data
 
 - The camera turns on only after you press Start, and off when you press Stop.
-- Video frames go from the camera to the SDK in the Node process. A shrunk copy goes to the page as the mirror preview; no frame is recorded or written to disk.
+- Video frames go from the camera to the SDK in the Node process. A shrunk copy goes to the page as the mirror preview; the app never records or writes a camera frame to disk.
+- The **● Record** button is the one exception, and only when you press it: it saves a .webm of this page (visuals, HUD, the preview as shown, pixelated if Pixelate is on, and the synth audio) to your browser's Downloads folder. Nothing is uploaded.
 - Numbers (pulse, breathing rate, breathing trace, blink/talk flags, expression scores, a movement level) and a 320×180 mirror preview at about 10 frames a second cross the local WebSocket to the page. The server listens on 127.0.0.1 only. Nothing is recorded or stored.
 - The SDK needs a network connection: measurements run inside an authenticated session with Presage's servers, opened with your API key.
 - SDK telemetry is switched off (`enableTelemetry: false`). Per Presage's [Telemetry & Privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy) page, the SDK then starts no telemetry session and transmits no session summary; even when on, that summary never contains video frames or measured values.

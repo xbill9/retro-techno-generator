@@ -419,3 +419,68 @@ $('stop').onclick = () => {
 $('view').onclick = () => calib.toggle();
 $('pixel').onclick = () => calib.setPixelate(!calib.pixelate);
 calib.setPixelate(calib.pixelate);
+
+// ---- demo recorder --------------------------------------------------------
+// Records what this page shows (scope, step grid, HUD, the alignment preview
+// with its border and instruction) plus the synth's audio, straight from the
+// page, and saves a .webm. Nothing is uploaded; the file lands in Downloads.
+
+const recorder = (() => {
+  const RW = 1280, RH = 720;
+  const rc = document.createElement('canvas'); rc.width = RW; rc.height = RH;
+  const rg = rc.getContext('2d');
+  let mr = null, chunks = [], raf = 0, audioDest = null;
+
+  function text(el, str = el.textContent) {
+    const r = el.getBoundingClientRect(); if (!r.width || !str.trim()) return;
+    const cs = getComputedStyle(el), { k, ox, oy } = fit();
+    rg.fillStyle = cs.color; rg.textBaseline = 'top'; rg.textAlign = 'left';
+    rg.font = `${cs.fontWeight} ${parseFloat(cs.fontSize) * k}px ${cs.fontFamily}`;
+    rg.fillText(str.trim(), ox + r.left * k, oy + r.top * k);
+  }
+  // one scale for both axes, page centred in the 16:9 frame
+  const fit = () => { const k = Math.min(RW / innerWidth, RH / innerHeight); return { k, ox: (RW - innerWidth * k) / 2, oy: (RH - innerHeight * k) / 2 }; };
+  const visible = (el) => el.offsetParent !== null && getComputedStyle(el).display !== 'none';
+
+  function frame() {
+    const { k, ox, oy } = fit(), X = (v) => ox + v * k, Y = (v) => oy + v * k;
+    rg.fillStyle = '#000'; rg.fillRect(0, 0, RW, RH);
+    rg.drawImage(cv, ox, oy, innerWidth * k, innerHeight * k);
+    for (const d of $('hud').children) { text(d, d.firstChild.textContent); text(d.querySelector('b')); }
+    text($('status'));
+    if (visible($('calib'))) {
+      const pr = $('preview'), r = pr.getBoundingClientRect(), bw = parseFloat(getComputedStyle(pr).borderTopWidth);
+      rg.fillStyle = '#000d'; const br = $('calib').getBoundingClientRect();
+      rg.fillRect(X(br.left), Y(br.top), br.width * k, br.height * k);
+      rg.fillStyle = pr.style.borderColor || '#f33';
+      rg.fillRect(X(r.left), Y(r.top), r.width * k, r.height * k);
+      rg.drawImage(pr, X(r.left + bw), Y(r.top + bw), (r.width - 2 * bw) * k, (r.height - 2 * bw) * k);
+      for (const id of ['c-say', 'c-sub']) if (visible($(id))) text($(id));
+    }
+    rg.fillStyle = '#f33'; rg.beginPath(); rg.arc(RW - 24, 24, 8, 0, Math.PI * 2); rg.fill(); // REC dot
+    raf = requestAnimationFrame(frame);
+  }
+
+  function start() {
+    if (!ctx) { setStatus('press Start first, then Record'); return; }
+    if (!audioDest) { audioDest = ctx.createMediaStreamDestination(); scope.connect(audioDest); }
+    const stream = new MediaStream([...rc.captureStream(30).getVideoTracks(), ...audioDest.stream.getAudioTracks()]);
+    const type = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'].find((t) => MediaRecorder.isTypeSupported(t));
+    mr = new MediaRecorder(stream, { mimeType: type, videoBitsPerSecond: 6e6 });
+    chunks = [];
+    mr.ondataavailable = (e) => e.data.size && chunks.push(e.data);
+    mr.onstop = () => {
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob(chunks, { type: 'video/webm' }));
+      a.download = `retro-techno-demo-${new Date().toISOString().slice(0, 19).replace(/:/g, '')}.webm`;
+      a.click();
+      setStatus(`saved ${a.download} to Downloads`);
+    };
+    mr.start(1000);
+    frame();
+    $('rec').textContent = '■ Stop recording';
+  }
+  function stop() { cancelAnimationFrame(raf); mr?.stop(); mr = null; $('rec').textContent = '● Record'; }
+  return { toggle: () => (mr ? stop() : start()) };
+})();
+$('rec').onclick = () => recorder.toggle();
