@@ -1,0 +1,15 @@
+# Demo video, recorded 2026-11-06 with the page's Record button, uploaded unlisted to https://youtu.be/_FX8n_wk7t4
+
+ffprobe of the uploaded MP4:
+stream|codec_name=h264|width=1280|height=720
+stream|codec_name=aac
+format|duration=33.733333|size=7688160
+mean_volume: -15.0 dB (of the source .webm)
+
+Read from frames sampled every 3 s (HUD and status line):
+- status line: "in position" (live camera, SDK validation OK), once "Place more of the chest in view."
+- BREATHS/MIN: 14, 14, 14, 14, 12, 12, 11, 11, 11, 6, 12
+- PULSE: 72 in every frame (the starting value; no pulse reading arrived in this session)
+- VITALS: LIVE, with one HELD frame while moving (MOVE bar partly filled)
+- MODE: ACID, then HARDCORE, then AMBIENT, changed with the mode dropdown
+- camera preview: hidden for the whole recording

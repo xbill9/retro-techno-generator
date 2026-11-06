@@ -12,7 +12,7 @@ This article provides a step by step guide to Retro Techno Generator, a music to
 
 https://github.com/xbill9/retro-techno-generator
 
-**Your pulse sets the tempo and picks the style, your face plays the lead, and your dancing opens the filters.** Pulse and breathing need you to hold still, and the music asks you to move, so the app makes the two take turns: dance and the movement drives the sound, freeze for a few seconds and it re-reads your pulse. A hard dance raises your pulse, and the next still moment pushes the tempo up.
+**Your breathing and pulse steer the music, your face plays the lead, and your dancing opens the filters.** Pulse and breathing need you to hold still, and the music asks you to move, so the app makes the two take turns: dance and the movement drives the sound, freeze for a few seconds and it re-reads your pulse. A hard dance raises your pulse, and the next still moment pushes the tempo up.
 
 ---
 
@@ -38,7 +38,9 @@ The style switch has 3 BPM of hysteresis at each edge, so a pulse sitting at 70 
 
 ## Demo
 
-PENDING: demo video link.
+{% embed https://youtu.be/_FX8n_wk7t4 %}
+
+The clip is 34 seconds of a live camera session, recorded with the page's own Record button, with the camera preview hidden. The status line reads "in position", the breathing rate follows the SDK from 14 down to 6 and back to 12 breaths per minute, VITALS switches to HELD while I move and back to LIVE when I freeze, and the mode dropdown steps through acid, hardcore and ambient. The pulse readout holds its starting value of 72 for the whole clip: no pulse reading arrived during that session, so the tempo stays on its default.
 
 ---
 
@@ -126,7 +128,7 @@ The server shrinks every third frame or so to 320×180 and sends about ten a sec
 | 12 | `kExcessiveMotion` | Moving. Freeze for a few seconds to re-read pulse |
 | 16 | `kFaceTooLow` | ⬆ Move up, or tilt the screen forward |
 
-After the first good reading the preview shrinks to a corner thumbnail and stays there, so dancing does not bring the full panel back. A **Pixelate** button draws the preview as coarse blocks, enough to line up against the outline without showing a recognisable face, which is how the demo video was recorded.
+After the first good reading the preview shrinks to a corner thumbnail and stays there, so dancing does not bring the full panel back. A **Pixelate** button draws the preview as coarse blocks, enough to line up against the outline without showing a recognisable face, for streaming or recording. **Camera view** hides the preview entirely, which is how the demo was recorded.
 
 #### Step 5 — Turn Movement Into an Input
 
@@ -186,14 +188,16 @@ The tempo closes 5% of the gap to the held pulse on every sixteenth-note step, s
 
 The goal of this article was to build a music toy that responds to the body in real time with the Presage SmartSpectra SDK. The key to the solution was letting dancing and stillness take turns: movement drives the sound, and pulse and breathing are read only in the still moments between. The results were:
 
-- 🟢 Pulse, breathing, smile, surprise, blink and talking each drive a part of the music
+- 🟢 Breathing, pulse, smile, surprise, blink and talking each drive a part of the music
+- 🟢 In the demo the breathing rate updates live from the SDK, from 14 to 6 and back to 12 breaths per minute
+- ❌ No pulse reading arrived during the recorded session, so the demo's tempo stays on its default
 - 🟢 The SDK's `videoOutput` frames feed a mirror view with plain instructions mapped from the SDK's validation codes
 - 🟢 The same frames give a movement level that reads 0.00 sitting still and drives the filters while you dance
 - 🟢 Pulse and breathing update only while still, and the HUD shows LIVE or HELD
 - ⚠️ The SDK needs your face and upper chest in frame and light in front of you before it sends any metrics
 - ⚠️ The movement baseline was tuned in one dim room; a much noisier camera may need a different scale
 
-Scope: one Linux laptop with its integrated 1280×720 camera, SmartSpectra Node SDK 3.4.0, Chrome, measured on 2026-11-06. The movement figures come from one 100-sample still run and one 17-second mixed run in a dim room. macOS and Windows were not tested.
+Scope: one Linux laptop with its integrated 1280×720 camera, SmartSpectra Node SDK 3.4.0, Chrome, measured on 2026-11-06. The movement figures come from one 100-sample still run and one 17-second mixed run in a dim room, and the demo is one 34-second session. macOS and Windows were not tested.
 
 The strategy for turning real-time human signals into music with the SmartSpectra SDK was validated with an incremental step by step approach.
 
