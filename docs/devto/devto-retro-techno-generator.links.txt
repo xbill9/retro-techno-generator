@@ -1,0 +1,7 @@
+# Destination URLs for the LinkedIn post. PENDING fails the run on purpose.
+devto      = https://dev.to/xbill/retro-techno-generator-your-pulse-plays-90s-acid-techno-your-dancing-plays-the-filters-1a6g
+medium     = SKIP
+substack   = SKIP
+builder    = SKIP
+challenge  = https://dev.to/challenges/presage-2026-11-04
+repo       = https://github.com/xbill9/retro-techno-generator

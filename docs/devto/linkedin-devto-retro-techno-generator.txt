@@ -1,0 +1,16 @@
+Me, stanning a DEV challenge again? Apparently yes. This time I handed the drum machine to my own body. 🎛️
+
+My entry for the DEV Presage SmartSpectra SDK Challenge is Retro Techno Generator: a webcam reads your breathing, pulse and facial expressions through the SmartSpectra SDK, and a browser synth turns them into 90s acid techno and early-90s hardcore. No samples, every sound is synthesised in Web Audio.
+
+What it does:
+
+- Breathing, pulse, smile, surprise, blink and talking each play a part of the track
+- Dancing opens the filters and doubles the hi-hats; freeze for a few seconds and it re-reads your vitals
+- A mirror view with plain instructions shows you where to sit, with a Pixelate button so you can stream or record without showing your face
+- The camera only starts after a consent screen, nothing is stored, and SDK telemetry is off
+
+The entry on dev.to: https://dev.to/xbill/retro-techno-generator-your-pulse-plays-90s-acid-techno-your-dancing-plays-the-filters-1a6g
+The challenge: https://dev.to/challenges/presage-2026-11-04
+Source: https://github.com/xbill9/retro-techno-generator
+
+#DEVChallenge #PresageChallenge #WebAudio #JavaScript
