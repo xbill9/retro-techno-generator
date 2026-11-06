@@ -201,6 +201,8 @@ Scope: one Linux laptop with its integrated 1280×720 camera, SmartSpectra Node 
 
 The strategy for turning real-time human signals into music with the SmartSpectra SDK was validated with an incremental step by step approach.
 
+This app and article were created with the help of AI: the code, the write-up and the demo recording tool were built with Claude Code, and every figure was checked against the runs and files linked in the repo.
+
 ---
 
 #### References
