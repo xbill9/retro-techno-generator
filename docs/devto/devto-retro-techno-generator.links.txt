@@ -5,3 +5,5 @@ substack   = https://xbill9.substack.com/p/retro-techno-generator-your-pulse
 builder    = SKIP
 challenge  = https://dev.to/challenges/presage-2026-11-04
 repo       = https://github.com/xbill9/retro-techno-generator
+# the announcement itself, posted 2026-11-06
+linkedin   = https://www.linkedin.com/feed/update/urn:li:share:7524549531540172800/
