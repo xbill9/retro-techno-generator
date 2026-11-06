@@ -8,7 +8,7 @@ let breathHist = [];
 let fakeBreathPhase = 0;
 
 const $ = (id) => document.getElementById(id);
-const pct = (v) => (v > 1 ? v / 100 : v); // expression confidence may be 0-1 or 0-100
+const pct = (v) => Math.min(1, Math.max(0, v / 100)); // SDK expression confidence is a percentage, 0-100
 
 const ws = new WebSocket(`ws://${location.host}`);
 ws.onmessage = (e) => {

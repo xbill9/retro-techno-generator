@@ -1,3 +1,6 @@
 node_modules/
 .env
 *.mp4
+.agents/
+.claude/
+skills-lock.json

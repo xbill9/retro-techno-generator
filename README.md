@@ -35,7 +35,8 @@ Open http://localhost:8080 and press Start. Get a free API key at https://physio
 - The camera turns on only after you press Start, and off when you press Stop.
 - Video frames go from the camera to the SDK in the Node process. They are never sent to the page, displayed, recorded or written to disk.
 - Only numbers (pulse, breathing rate, breathing trace, blink/talk flags, expression scores) cross the local WebSocket to the page. The server listens on 127.0.0.1 only. Nothing is stored.
-- SDK telemetry is switched off (`enableTelemetry: false`). The SDK still needs an authenticated session with Presage's servers to measure; see Presage's terms for what that session carries.
+- The SDK computes every metric on-device. It contacts Presage's servers only to validate the API key, so it needs a network connection.
+- SDK telemetry is switched off (`enableTelemetry: false`).
 - This is a music toy. It makes no health or medical claims.
 
 #### Files

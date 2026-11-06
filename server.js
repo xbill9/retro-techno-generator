@@ -79,6 +79,7 @@ async function stopSdk() {
 }
 
 function onMetrics(m) {
+  if (Buffer.isBuffer(m)) return; // decoder not registered
   const out = { type: 'signals' };
   const pulse = last(m.cardio?.pulseRate);
   if (pulse) Object.assign(out, { pulse: pulse.value, pulseConfidence: pulse.confidence, pulseStable: pulse.stable });
