@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc 3.11" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Retro Techno Generator: Your Pulse Plays 90s Acid Techno, Your Dancing Plays the Filters</title>
+  <meta name="description" content="A Presage SmartSpectra SDK challenge entry. A webcam reads pulse, breathing and expressions, and a browser synth turns them into acid techno and early-90s hardcore. Dancing drives the filters; freezing re-reads your pulse." />
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      white-space: pre-wrap;
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: 1.5em;}
+    div.column{flex: auto;}
+    @media screen {
+    div.columns{gap: min(4vw, 1.5em);}
+    div.column{overflow-x: auto;}
+    }
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+  </style>
+  <style>
+    body{font-family:-apple-system,'Segoe UI',Roboto,'Liberation Sans',Arial,sans-serif;
+         font-size:18px;line-height:1.58;max-width:42em;color:#242424;}
+    h1,h2,h3,h4{font-weight:700;line-height:1.25;margin-top:1.8em;}
+    h4{font-size:1.25em;}
+    img{max-width:100%;height:auto;display:block;margin:1.6em 0;}
+    pre{background:#f7f7f7;border:1px solid #e6e6e6;border-radius:4px;
+        padding:12px 14px;overflow-x:auto;font-size:14px;line-height:1.45;}
+    code{font-family:'Liberation Mono',Menlo,Consolas,monospace;}
+    :not(pre)>code{background:#f2f2f2;padding:1px 5px;border-radius:3px;font-size:.9em;}
+    blockquote{border-left:3px solid #ddd;margin-left:0;padding-left:1em;color:#555;}
+    hr{border:0;border-top:1px solid #e6e6e6;margin:2.4em 0;}
+  </style>
+</head>
+<body>
+<p><em>This is a submission for the <a
+href="https://dev.to/challenges/presage-2026-11-04">Presage SmartSpectra
+SDK Challenge</a></em></p>
+<figure><img src="https://raw.githubusercontent.com/xbill9/retro-techno-generator/main/docs/devto/medium/img/devto-cover.00af8e1a.jpg" alt="Retro Techno Generator: Your Pulse Plays 90s Acid Techno, Your Dancing Plays the Filters" /></figure>
+<p>This article provides a step by step guide to Retro Techno Generator,
+a music toy built on the Presage SmartSpectra SDK for Node.js. A webcam
+reads your pulse, breathing and facial expressions, and a browser page
+turns them into 90s acid techno and hardcore with Web Audio. Every sound
+is synthesised; there are no samples.</p>
+<p><a
+href="https://github.com/xbill9/retro-techno-generator">https://github.com/xbill9/retro-techno-generator</a></p>
+<p><strong>Your breathing and pulse steer the music, your face plays the
+lead, and your dancing opens the filters.</strong> Pulse and breathing
+need you to hold still, and the music asks you to move, so the app makes
+the two take turns: dance and the movement drives the sound, freeze for
+a few seconds and it re-reads your pulse. A hard dance raises your
+pulse, and the next still moment pushes the tempo up.</p>
+<hr />
+<h4 id="what-i-built">What I Built</h4>
+<p>A Node server runs a SmartSpectra session on the local camera and
+streams the signals over a WebSocket to a page on
+<code>localhost</code>. The page is the instrument: a 16-step sequencer,
+a 303-style acid line, drum synthesis, pads, piano stabs and a hoover,
+all built from Web Audio oscillators and filters.</p>
+<p><img src="https://raw.githubusercontent.com/xbill9/retro-techno-generator/main/docs/devto/medium/img/devto-retro-techno-generator-table-1.png"
+alt="Table: Signal, What it plays" /></p>
+<p><img
+src="https://raw.githubusercontent.com/xbill9/retro-techno-generator/main/docs/devto/screenshot-acid.jpg"
+alt="Retro Techno Generator in acid mode: HUD with mode, BPM, pulse, breaths per minute, smile, movement and vitals state, an oscilloscope trace and the 16-step grid" /></p>
+<p>The style switch has 3 BPM of hysteresis at each edge, so a pulse
+sitting at 70 does not flip between ambient and acid every bar. A
+dropdown overrides the pulse-picked style for anyone who wants to stay
+in hardcore.</p>
+<hr />
+<h4 id="demo">Demo</h4>
+<p>Demo video: <a
+href="https://youtu.be/_FX8n_wk7t4">https://youtu.be/_FX8n_wk7t4</a></p>
+<p>The clip is 34 seconds of a live camera session, recorded with the
+page's own Record button, with the camera preview hidden. The status
+line reads "in position", the breathing rate follows the SDK from 14
+down to 6 and back to 12 breaths per minute, VITALS switches to HELD
+while I move and back to LIVE when I freeze, and the mode dropdown steps
+through acid, hardcore and ambient. The pulse readout holds its starting
+value of 72 for the whole clip: no pulse reading arrived during that
+session, so the tempo stays on its default.</p>
+<hr />
+<h4 id="code">Code</h4>
+<p><a
+href="https://github.com/xbill9/retro-techno-generator">https://github.com/xbill9/retro-techno-generator</a></p>
+<p>MIT licence. Setup is in the README and below.</p>
+<h4 id="at-this-point-you-should-have">At this point you should
+have…</h4>
+<ul>
+<li>Node 20 or later on Linux x64/arm64, macOS Apple Silicon or Windows
+x64</li>
+<li>A webcam and a desk lamp you can point at your face</li>
+<li>A free SmartSpectra API key from <a
+href="https://physiology.presagetech.com/auth/register">https://physiology.presagetech.com/auth/register</a></li>
+</ul>
+<h4 id="step-1--install-and-run">Step 1 — Install and Run</h4>
+<pre class="bash"><code>git clone https://github.com/xbill9/retro-techno-generator
+cd retro-techno-generator
+npm install
+echo &quot;SMARTSPECTRA_API_KEY=your-key&quot; &gt; .env
+npm start
+Retro Techno Generator on http://localhost:8080 (live camera)</code></pre>
+<p>Open http://localhost:8080 and press Start. <code>npm run fake</code>
+runs the whole synth with sliders in place of the camera and needs no
+key, which is the quickest way to hear it.</p>
+<h4 id="step-2--pick-a-camera">Step 2 — Pick a Camera</h4>
+<pre class="bash"><code>node server.js --list-cameras</code></pre>
+<p>Set <code>CAMERA=&lt;id&gt;</code> in <code>.env</code> to use a
+camera other than the default.</p>
+<hr />
+<h4 id="how-it-responds-to-human-signals">How It Responds to Human
+Signals</h4>
+<h4 id="step-3--open-the-smartspectra-session">Step 3 — Open the
+SmartSpectra Session</h4>
+<p>The server creates the session when the page sends
+<code>start</code>, and requests breathing, cardio and face metrics in
+one session:</p>
+<pre class="javascript"><code>sdk = new S.SmartSpectraSDK({
+  apiKey: KEY,
+  requestedMetrics: [...S.breathingMetrics, ...S.cardioMetrics, ...S.faceMetrics],
+  enableTelemetry: false,
+});
+sdk.on(&#39;metrics&#39;, (buf) =&gt; onMetrics(S.decodeMetrics(buf)));
+sdk.on(&#39;validationStatus&#39;, (code, _ts, hint) =&gt; broadcast({ type: &#39;status&#39;, code, hint }));
+sdk.on(&#39;videoOutput&#39;, onVideo);
+sdk.useCamera(S.CameraSelection.default);
+sdk.start();</code></pre>
+<p><code>onMetrics</code> takes the latest pulse rate, breathing rate
+and upper-chest breathing trace, the blink and talking flags, and the
+expression scores, and sends them to the page as one small JSON message.
+On Stop the server calls <code>stopAsync()</code> and then
+<code>destroy()</code>, which turns the camera off.</p>
+<h4 id="step-4--show-the-person-where-to-stand">Step 4 — Show the Person
+Where to Stand</h4>
+<p>The SDK measures only when it can see your face and upper chest, lit
+from the front, and it reports what is wrong through
+<code>validationStatus</code> codes. With a face in view and the chest
+below the frame it repeats this every frame:</p>
+<pre class="text"><code>VALID 16 Move up, or tilt the camera down.
+VALID 7 Place more of the chest in view.</code></pre>
+<p>A status line is easy to miss when you cannot see yourself, so the
+page has a mirror view. The SDK's <code>videoOutput</code> event
+delivers each processed frame, 1280×720 RGB at 30 frames per second on
+this laptop's camera:</p>
+<pre class="text"><code>VO 2764800 1280 720 3840 0
+video frames 149</code></pre>
+<p>The server shrinks every third frame or so to 320×180 and sends about
+ten a second as a binary WebSocket message. The page draws it mirrored,
+with a dashed head-and-shoulders outline, a border that is red until you
+are in position, yellow while the first readings arrive and green once
+they flow, and one large instruction mapped from the SDK code:</p>
+<p><img src="https://raw.githubusercontent.com/xbill9/retro-techno-generator/main/docs/devto/medium/img/devto-retro-techno-generator-table-2.png"
+alt="Table: Code, SDK name, On screen" /></p>
+<p>After the first good reading the preview shrinks to a corner
+thumbnail and stays there, so dancing does not bring the full panel
+back. A <strong>Pixelate</strong> button draws the preview as coarse
+blocks, enough to line up against the outline without showing a
+recognisable face, for streaming or recording. <strong>Camera
+view</strong> hides the preview entirely, which is how the demo was
+recorded.</p>
+<h4 id="step-5--turn-movement-into-an-input">Step 5 — Turn Movement Into
+an Input</h4>
+<p><code>kExcessiveMotion</code> is the SDK saying what every camera
+vitals method needs: stillness. A dance app cannot ask for that all the
+time, so the same 320×180 frames give a movement level, the mean
+brightness change per pixel between consecutive previews:</p>
+<pre class="javascript"><code>for (let p = 0, q = 4; p &lt; luma.length; p++, q += 3) {
+  luma[p] = (out[q] * 77 + out[q + 1] * 150 + out[q + 2] * 29) &gt;&gt; 8;
+  if (prevLuma) diff += Math.abs(luma[p] - prevLuma[p]);
+}
+broadcast({ type: &#39;motion&#39;, value: diff / luma.length });</code></pre>
+<p>Camera noise sets a baseline that depends on the room light. Sitting
+still in a dim room, 100 samples measured:</p>
+<pre class="text"><code>{&quot;n&quot;:100,&quot;min&quot;:3.03,&quot;p50&quot;:3.56,&quot;p90&quot;:8.58,&quot;max&quot;:17.58}</code></pre>
+<p>The page tracks that baseline from below and subtracts it, so sitting
+still reads 0.00 and moving reads up to about 0.37 on a 0 to 1 scale.
+Movement then drives the master filter, the acid filter and the hi-hat
+density.</p>
+<h4 id="step-6--read-vitals-only-when-still">Step 6 — Read Vitals Only
+When Still</h4>
+<p>Pulse and breathing updates are accepted only while the movement
+level stays under 0.15 and has stayed there for 1.5 seconds. Otherwise
+the last good values hold. The HUD shows the state as
+<code>VITALS LIVE</code> or <code>VITALS HELD</code>. Sampled every 500
+ms in the page:</p>
+<pre class="text"><code>[&quot;0.00&quot;,&quot;LIVE&quot;,72],[&quot;0.06&quot;,&quot;LIVE&quot;,72],[&quot;0.26&quot;,&quot;HELD&quot;,72],[&quot;0.14&quot;,&quot;HELD&quot;,72],
+[&quot;0.37&quot;,&quot;HELD&quot;,72],[&quot;0.17&quot;,&quot;HELD&quot;,72],[&quot;0.04&quot;,&quot;HELD&quot;,72],[&quot;0.02&quot;,&quot;LIVE&quot;,72]</code></pre>
+<p>The tempo closes 5% of the gap to the held pulse on every
+sixteenth-note step, so a fresh reading after a dance ramps the track up
+over a few bars.</p>
+<p>🔎 Tip: light from in front matters more than anything else. With a
+window behind you the camera exposes for the window, and the SDK reports
+<code>Too dark</code> or finds no face at all. A desk lamp aimed at your
+face fixes both.</p>
+<hr />
+<h4 id="prize-categories">Prize Categories</h4>
+<p><strong>Most Creative or Delightful Use.</strong> The idea came from
+the rave flyers of the early 90s promising music that moves with you.
+Here the music listens to the body directly: your pulse picks between
+ambient, acid and hardcore, a smile flips the key to major, a surprised
+face fires a hoover, and a blink stutters the drums. The part that makes
+it play like an instrument is the turn-taking between dancing and
+stillness. Dance hard, freeze, and you hear your own heart rate push the
+track into hardcore.</p>
+<hr />
+<h4 id="consent-and-data-handling">Consent and Data Handling</h4>
+<ul>
+<li><strong>Consent first.</strong> The page opens on a consent screen
+that says what the camera is for. The camera turns on only when you
+press Start and turns off when you press Stop.</li>
+<li><strong>Video stays on the machine.</strong> Frames go from the
+camera to the SDK in the local Node process. A 320×180 copy goes to the
+page for the mirror view. No frame is recorded or written to disk.
+Pixelate reduces that view to coarse blocks for anyone streaming or
+recording their screen. The app writes no camera frame to disk. The one
+exception is the <strong>● Record</strong> button, used for the demo:
+only while it is on, it saves a .webm of the page as shown, with the
+synth audio, to the browser's Downloads folder.</li>
+<li><strong>Local only.</strong> The server listens on
+<code>127.0.0.1</code>, so nothing outside the machine can open the page
+or the WebSocket.</li>
+<li><strong>Nothing is stored.</strong> No measurements, frames or logs
+of signals are kept. Closing the page or pressing Stop ends
+everything.</li>
+<li><strong>SDK telemetry is off</strong>
+(<code>enableTelemetry: false</code>). Per Presage's Telemetry &amp;
+Privacy page, the SDK then starts no telemetry session and transmits no
+session summary, and even when on, that summary never contains video
+frames or measured values.</li>
+<li><strong>Network.</strong> The SDK needs a connection: measurements
+run inside an authenticated session with Presage's servers, opened with
+your API key.</li>
+<li><strong>No AI services</strong> are used by the app.</li>
+<li><strong>A music toy.</strong> It makes no health or medical claims
+and takes no decisions from the numbers. It turns them into music.</li>
+</ul>
+<hr />
+<h4 id="summary">Summary</h4>
+<p>The goal of this article was to build a music toy that responds to
+the body in real time with the Presage SmartSpectra SDK. The key to the
+solution was letting dancing and stillness take turns: movement drives
+the sound, and pulse and breathing are read only in the still moments
+between. The results were:</p>
+<ul>
+<li>🟢 Breathing, pulse, smile, surprise, blink and talking each drive a
+part of the music</li>
+<li>🟢 In the demo the breathing rate updates live from the SDK, from 14
+to 6 and back to 12 breaths per minute</li>
+<li>❌ No pulse reading arrived during the recorded session, so the
+demo's tempo stays on its default</li>
+<li>🟢 The SDK's <code>videoOutput</code> frames feed a mirror view with
+plain instructions mapped from the SDK's validation codes</li>
+<li>🟢 The same frames give a movement level that reads 0.00 sitting
+still and drives the filters while you dance</li>
+<li>🟢 Pulse and breathing update only while still, and the HUD shows
+LIVE or HELD</li>
+<li>⚠️ The SDK needs your face and upper chest in frame and light in
+front of you before it sends any metrics</li>
+<li>⚠️ The movement baseline was tuned in one dim room; a much noisier
+camera may need a different scale</li>
+</ul>
+<p>Scope: one Linux laptop with its integrated 1280×720 camera,
+SmartSpectra Node SDK 3.4.0, Chrome, measured on 2026-11-06. The
+movement figures come from one 100-sample still run and one 17-second
+mixed run in a dim room, and the demo is one 34-second session. macOS
+and Windows were not tested.</p>
+<p>The strategy for turning real-time human signals into music with the
+SmartSpectra SDK was validated with an incremental step by step
+approach.</p>
+<p>This app and article were created with the help of AI: the code, the
+write-up and the demo recording tool were built with Claude Code, and
+every figure was checked against the runs and files linked in the
+repo.</p>
+<hr />
+<h4 id="references">References</h4>
+<ul>
+<li>The code: <a
+href="https://github.com/xbill9/retro-techno-generator">https://github.com/xbill9/retro-techno-generator</a></li>
+<li>Presage SmartSpectra SDK documentation: <a
+href="https://smartspectra.presagetech.com/docs/">https://smartspectra.presagetech.com/docs/</a></li>
+<li>SDK Telemetry &amp; Privacy: <a
+href="https://smartspectra.presagetech.com/docs/telemetry-and-privacy">https://smartspectra.presagetech.com/docs/telemetry-and-privacy</a></li>
+<li>SmartSpectra Node SDK on npm: <a
+href="https://www.npmjs.com/package/@smartspectra/node-sdk">https://www.npmjs.com/package/@smartspectra/node-sdk</a></li>
+<li>The challenge: <a
+href="https://dev.to/challenges/presage-2026-11-04">https://dev.to/challenges/presage-2026-11-04</a></li>
+</ul>
+</body>
+</html>
